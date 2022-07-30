@@ -1,6 +1,10 @@
+import 'package:benben/AboutAppPage.dart';
+import 'package:benben/AboutAuthorPage.dart';
 import 'package:benben/EventItem.dart';
+import 'package:benben/InsertPage.dart';
+import 'package:benben/NotificationPage.dart';
+import 'package:benben/SettingsItem.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 void main() {
   runApp(const MyApp());
@@ -52,14 +56,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-
-    });
+    Navigator.push(context, _createRoute());
   }
 
   @override
@@ -77,11 +74,53 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       drawer: Container(
-          margin: EdgeInsets.only(right: 100),
-          padding: EdgeInsets.only(top:200),
+          margin: const EdgeInsets.only(right: 100),
+          padding: const EdgeInsets.only(top:80),
           constraints: const BoxConstraints.expand(),
           color: Colors.brown,
-          child: const Text("I'm a drawer")),
+          child: Container(
+            margin: const EdgeInsets.only(left: 20, right: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      width: 60,
+                      height: 60,
+                      child: CircleAvatar(
+                        backgroundColor: Color(0xfffedbd0),
+                        child: Text("Hola"),
+                      ),
+                    ),
+                    const SizedBox(height: 24,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text("璃月的小龟", style: TextStyle(color: Color(0xfffedbd0), fontSize: 16)),
+                          SizedBox(height: 8,),
+                          Text("id: 1588965", style: TextStyle(color: Color(0xfffedbd0), fontSize: 8),)
+                        ]
+
+                )
+                  ]
+                ),
+                const SizedBox(height: 160),
+                const SettingsItem(text: "通知提醒", iconData: Icons.notifications, newPage: NotificationPage()),
+                const Divider(color: Color(0xfffedbd0)),
+                const SettingsItem(text: "关于作者", iconData: Icons.face, newPage: AboutAuthorPage()),
+                const Divider(color: Color(0xfffedbd0)),
+                const SettingsItem(text: "关于APP", iconData: Icons.info, newPage: AboutAppPage()),
+                const Divider(color: Color(0xfffedbd0)),
+                TextButton(
+                    onPressed: () {},
+                    child: const SettingsItem(text: "登出账号", iconData: Icons.logout)),
+                const Divider(color: Color(0xfffedbd0)),
+              ],
+            ),
+          )),
       body: Container(
         color: const Color(0xfffedbd0),
         alignment: Alignment.center,
@@ -89,6 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // in the middle of the parent.
         child: ListView(
           children: const [
+            SizedBox(height: 6),
             EventItem(),
             EventItem(),
             EventItem()
@@ -100,6 +140,24 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => const InsertPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 }
