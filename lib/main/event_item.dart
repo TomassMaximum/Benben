@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 enum Menu { mark, share, delete }
@@ -25,7 +27,7 @@ class EventItem extends StatelessWidget {
                 children: [
                   Container(
                     alignment: Alignment.center,
-                      child: Text(DateTime.now().toString())
+                      child: Text("${DateTime.now().month.toString()}月${DateTime.now().day.toString()}日 ${getWeekday(DateTime.now().weekday)}")
                   ),
                   Positioned(
                     right: 0,
@@ -70,6 +72,28 @@ class EventItem extends StatelessWidget {
       ),
 
     );
+  }
+
+  String getWeekday(int weekday) {
+    switch(weekday) {
+      case 1:
+        return "星期一";
+      case 2:
+        return "星期二";
+      case 3:
+        return "星期三";
+      case 4:
+        return "星期四";
+      case 5:
+        return "星期五";
+      case 6:
+        return "星期六";
+      case 7:
+        return "星期日";
+        default:
+          log("Error! weekday unexpected: ${weekday.toString()}");
+          return "N/A";
+    }
   }
 
 }
