@@ -17,13 +17,17 @@ class SettingsItem extends StatelessWidget {
         }
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => newPage!));
       },
-      child: RichText(
-        text: TextSpan(
-            children: [
-              WidgetSpan(child: Icon(iconData, color: Colors.white, size: 20,)),
-              const WidgetSpan(child: SizedBox(width: 12)),
-              TextSpan(text: text, style: const TextStyle(fontSize: 16, ))
-            ]
+      child: Container(
+        alignment: Alignment.centerLeft,
+        width: double.infinity,
+        child: RichText(
+          text: TextSpan(
+              children: [
+                WidgetSpan(child: Icon(iconData, color: Colors.white, size: 20,)),
+                const WidgetSpan(child: SizedBox(width: 12)),
+                TextSpan(text: text, style: const TextStyle(fontSize: 16, ))
+              ]
+          ),
         ),
       ),
     );

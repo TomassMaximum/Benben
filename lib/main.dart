@@ -116,13 +116,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 const Divider(color: Color(0xfffedbd0)),
                 TextButton(
                   onPressed: () {},
-                  child: RichText(
-                    text: const TextSpan(
-                        children: [
-                          WidgetSpan(child: Icon(Icons.logout, color: Colors.white, size: 20,)),
-                          WidgetSpan(child: SizedBox(width: 12)),
-                          TextSpan(text: "登出账号", style: TextStyle(fontSize: 16, ))
-                        ]
+                  child: Container(
+                    width: double.infinity,
+                    alignment: Alignment.centerLeft,
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: const TextSpan(
+                          children: [
+                            WidgetSpan(child: Icon(Icons.logout, color: Colors.white, size: 20,)),
+                            WidgetSpan(child: SizedBox(width: 12)),
+                            TextSpan(text: "登出账号", style: TextStyle(fontSize: 16))
+                          ]
+                      ),
                     ),
                   ),
                 ),
