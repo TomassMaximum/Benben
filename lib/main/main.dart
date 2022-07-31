@@ -1,9 +1,9 @@
-import 'package:benben/AboutAppPage.dart';
-import 'package:benben/AboutAuthorPage.dart';
-import 'package:benben/EventItem.dart';
-import 'package:benben/InsertPage.dart';
-import 'package:benben/NotificationPage.dart';
-import 'package:benben/SettingsItem.dart';
+import 'package:benben/about_app/AboutAppPage.dart';
+import 'package:benben/about_author/AboutAuthorPage.dart';
+import 'package:benben/main/EventItem.dart';
+import 'package:benben/edit/InsertPage.dart';
+import 'package:benben/settings_notification/NotificationPage.dart';
+import 'package:benben/main/SettingsItem.dart';
 import 'package:flutter/material.dart';
 
 void main() {
