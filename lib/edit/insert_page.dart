@@ -1,3 +1,4 @@
+import 'package:benben/edit/number_input.dart';
 import 'package:flutter/material.dart';
 
 class InsertPage extends StatelessWidget {
@@ -20,7 +21,13 @@ class InsertPage extends StatelessWidget {
       ),
       body: Container(
         color: const Color(0xfffedbd0),
-
+        alignment: Alignment.topCenter,
+        padding: const EdgeInsets.only(left: 24, top: 24, right: 24),
+        child: Column(
+          children: [
+            Container(color: Colors.greenAccent, child: const NumberInput())
+          ],
+        ),
       ),
     );
   }
