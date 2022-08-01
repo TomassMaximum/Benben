@@ -1,7 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
+typedef InputUpdate = Function (String, double);
+
 class NumberInput extends StatefulWidget {
-  const NumberInput({Key? key}) : super(key: key);
+  const NumberInput({Key? key, required this.inputUpdate}) : super(key: key);
+
+  final InputUpdate inputUpdate;
 
   @override
   State<StatefulWidget> createState() {
@@ -13,6 +19,22 @@ class NumberInput extends StatefulWidget {
 class NumberInputState extends State<NumberInput> {
 
   String? _selectedItem = "0";
+  late TextEditingController _controller;
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: "0");
+    _focusNode = FocusNode();
+    _focusNode.addListener(() {
+      if(_controller.value.text == "0") {
+        _controller.text = "";
+      } else if(_controller.value.text.isEmpty) {
+        _controller.text = "0";
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +69,7 @@ class NumberInputState extends State<NumberInput> {
                 if(item == "13") {
                   return;
                 }
+                widget.inputUpdate(item!, double.parse(_controller.value.text));
                 setState(() {
                   _selectedItem = item;
                 });
@@ -60,13 +83,21 @@ class NumberInputState extends State<NumberInput> {
             alignment: Alignment.center,
             width: 80,
             height: 48,
-            child: TextFormField(initialValue: "0", textAlign: TextAlign.center,)
+            child: TextFormField(
+              focusNode: _focusNode,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              onChanged: (value) {
+                log("Edit complete");
+                widget.inputUpdate(_selectedItem!, double.parse(value));
+              },
+              textAlign: TextAlign.center,
+              controller: _controller,
+            )
         ),
         const Text("元")
       ],
     );
   }
-
 }
 
 class InsertTypeItem extends StatelessWidget {

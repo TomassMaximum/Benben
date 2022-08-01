@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:benben/edit/number_input.dart';
 import 'package:benben/models/note_data.dart';
@@ -32,12 +33,17 @@ class InsertPageState extends State<InsertPage> {
           TextButton(onPressed: () {}, child: const Icon(Icons.check,color: Colors.white,))
         ],
       ),
-      body: Container(
-        color: const Color(0xfffedbd0),
-        alignment: Alignment.topCenter,
-        padding: const EdgeInsets.only(left: 24, top: 24, right: 24),
-        child: ListView(
-          children: _getListItems(),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: Container(
+          color: const Color(0xfffedbd0),
+          alignment: Alignment.topCenter,
+          padding: const EdgeInsets.only(left: 24, top: 24, right: 24),
+          child: ListView(
+            children: _getListItems(),
+          ),
         ),
       ),
     );
@@ -47,17 +53,27 @@ class InsertPageState extends State<InsertPage> {
     List<Widget> items = <Widget>[];
     for(SubNote subNote in subNotes) {
       if(subNote is Outcome) {
-        items.add(const NumberInput());
+        items.add(NumberInput(
+          inputUpdate: (String title, double value) {
+            subNote.title = title;
+            subNote.outcome = value;
+            log("data updated: title: $title value: $value");
+          })
+        );
       } else if(subNote is Income) {
-        items.add(const NumberInput());
+        items.add(NumberInput(
+            inputUpdate: (String title, double value) {
+              subNote.title = title;
+              subNote.income = value;
+            })
+        );
       } else if(subNote is ImageNote) {
-        ImageNote imageNote = subNote;
         items.add(
             Container(
               color: Colors.white,
               margin: const EdgeInsets.only(top: 16, bottom: 16),
               padding: const EdgeInsets.all(8),
-              child: Image.file(File(imageNote.url))
+              child: Image.file(File(subNote.url))
             )
         );
       } else if(subNote is TextNote) {
