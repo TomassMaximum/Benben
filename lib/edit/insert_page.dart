@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:benben/edit/number_input.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class InsertPage extends StatelessWidget {
   const InsertPage({Key? key}) : super(key: key);
@@ -25,12 +28,18 @@ class InsertPage extends StatelessWidget {
         padding: const EdgeInsets.only(left: 24, top: 24, right: 24),
         child: Column(
           children: [
-            Container(color: Colors.greenAccent, child: const NumberInput())
+            const NumberInput(),
+            TextButton(
+                onPressed: () async {
+                  final ImagePicker _picker = ImagePicker();
+                  final XFile? file = await _picker.pickImage(source: ImageSource.gallery);
+                },
+                child: const Icon(Icons.add_a_photo)
+            )
           ],
         ),
       ),
     );
   }
-
-
 }
+

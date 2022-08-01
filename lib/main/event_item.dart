@@ -63,8 +63,8 @@ class EventItem extends StatelessWidget {
             ),
             const Text("开销：121"),
             const Text("收入：2"),
-            const Text("    今天开始继续写小本本app，希望可以坚持下去。这是一个简洁得不要不要的记账app，即将带我向财富自由进发。",
-              style: TextStyle(decoration: TextDecoration.underline),
+            const Text("    今天开始继续写小本本app，希望可以坚持下去。\n    这是一个简洁得不要不要的记账app，即将带我向财富自由进发。",
+              style: TextStyle(fontSize: 16, letterSpacing: 1.5, height: 1.5),
 
             )
           ],
