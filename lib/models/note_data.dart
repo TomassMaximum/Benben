@@ -32,8 +32,8 @@ class TextNote extends SubNote {
   TextNote(this.text, int order) : super(order);
 }
 
-class ImageData extends SubNote {
+class ImageNote extends SubNote {
   String url;
 
-  ImageData(this.url, int order) : super(order);
+  ImageNote(this.url, int order) : super(order);
 }
