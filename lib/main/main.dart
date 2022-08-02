@@ -1,7 +1,8 @@
 import 'package:benben/about_app/about_app_page.dart';
 import 'package:benben/about_author/about_author_page.dart';
-import 'package:benben/main/event_item.dart';
+import 'package:benben/main/note_item.dart';
 import 'package:benben/edit/insert_page.dart';
+import 'package:benben/models/note_data.dart';
 import 'package:benben/settings_notification/notification_page.dart';
 import 'package:benben/main/settings_item.dart';
 import 'package:flutter/material.dart';
@@ -36,8 +37,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  void _incrementCounter() {
-    Navigator.push(context, _createRoute());
+  final List<NoteData> _notes = <NoteData>[];
+
+  void _editNote() async {
+    final result = await Navigator.push(context, _createRoute());
+    if(result != null) {
+      setState(() {
+        _notes.add(result);
+      });
+    }
   }
 
   @override
@@ -114,16 +122,11 @@ class _MyHomePageState extends State<MyHomePage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: ListView(
-          children: const [
-            SizedBox(height: 6),
-            EventItem(),
-            EventItem(),
-            EventItem()
-          ],
+          children: _notes.map((NoteData note) => NoteItem(note: note)).toList(),
         )
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _editNote,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
