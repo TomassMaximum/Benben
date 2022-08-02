@@ -17,7 +17,7 @@ class NoteItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: const Color.fromARGB(255, 254, 234, 230),
-      elevation: 2,
+      elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       margin: const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
       child: Container(

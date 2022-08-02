@@ -114,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // in the middle of the parent.
         child: ListView(
           key: UniqueKey(),
-          children: _notes.map((NoteData note) => NoteItem(note: note)).toList(),
+          children: _getNotesList(_notes),
         )
       ),
       floatingActionButton: FloatingActionButton(
@@ -123,6 +123,15 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  List<Widget> _getNotesList(List<NoteData> notes) {
+    List<Widget> noteWidgets = <Widget>[];
+    noteWidgets.add(const SizedBox(height: 6));
+    for(NoteData note in notes) {
+      noteWidgets.add(NoteItem(note: note));
+    }
+    return noteWidgets;
   }
 
   void _editNote() async {
