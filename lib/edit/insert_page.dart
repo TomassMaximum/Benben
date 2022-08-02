@@ -36,16 +36,10 @@ class InsertPageState extends State<InsertPage> {
               onPressed: () {
                 FocusScope.of(context).requestFocus(FocusNode());
 
-                //TODO 获取焦点调用后focusNode的监听在下一帧才会被通知
-                //TODO 导致键盘未收起时点击完成的情况下，数据来不及被记录页面就已经被pop
-                //TODO HACK：获取焦点后，pop操作延后一帧暂时解决
-                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                  NoteData _noteData = NoteData(DateTime.now().millisecondsSinceEpoch, subNotes, 0);
-                  String data = jsonEncode(_noteData);
-                  log(data);
-                  Navigator.of(context).pop(_noteData);
-                });
-
+                NoteData _noteData = NoteData(DateTime.now().millisecondsSinceEpoch, subNotes, 0);
+                String data = jsonEncode(_noteData);
+                log(data);
+                Navigator.of(context).pop(_noteData);
               },
               child: const Icon(Icons.check,color: Colors.white,))
         ],

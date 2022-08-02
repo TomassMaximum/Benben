@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 typedef TextUpdate = Function(String);
@@ -30,13 +32,16 @@ class TextInputState extends State<TextInput> {
       _controller.text = widget.text;
     }
 
+    _controller.addListener(() {
+      log("_controller update: ${_controller.text}");
+      widget.textUpdate(_controller.text);
+    });
+
     _focusNode.addListener(() {
       if(_controller.text == "请在这里输入内容..."){
         _controller.text = "";
       } else if(_controller.text.isEmpty) {
         _controller.text = "请在这里输入内容...";
-      } else {
-        widget.textUpdate(_controller.text);
       }
     });
   }

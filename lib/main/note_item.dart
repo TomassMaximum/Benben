@@ -121,12 +121,9 @@ class NoteItem extends StatelessWidget {
         ));
       } else if(subNote is TextNote) {
         subNotesList.add(
-            TextInput(
-                text: subNote.text,
-                textUpdate: (String text) {
-                  subNote.text = text;
-                }
-            )
+            Text(
+              subNote.text,
+              style: const TextStyle(color: Colors.brown, fontSize: 16, letterSpacing: 1.5, height: 1.4),)
         );
       }
     }
