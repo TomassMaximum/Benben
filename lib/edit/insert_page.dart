@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:benben/edit/number_input.dart';
+import 'package:benben/edit/text_input.dart';
 import 'package:benben/models/note_data.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,10 +20,15 @@ class InsertPageState extends State<InsertPage> {
   List<SubNote> subNotes = <SubNote>[];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("写小纸条"),
+        title: const Text("写条条"),
         leading: TextButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -77,16 +83,7 @@ class InsertPageState extends State<InsertPage> {
             )
         );
       } else if(subNote is TextNote) {
-        items.add(Container(
-          margin: const EdgeInsets.only(top: 16, bottom: 16),
-          child: EditableText(
-              controller: TextEditingController(),
-              focusNode: FocusNode(),
-              maxLines: null,
-              style: const TextStyle(color: Colors.brown, fontSize: 16, letterSpacing: 1.5, height: 1.4),
-              cursorColor: Colors.black,
-              backgroundCursorColor: Colors.black26),
-        ));
+        items.add(TextInput(text: subNote.text));
       }
     }
     items.add(const Divider());
