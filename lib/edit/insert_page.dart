@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:benben/edit/number_input.dart';
@@ -20,11 +21,6 @@ class InsertPageState extends State<InsertPage> {
   List<SubNote> subNotes = <SubNote>[];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -36,7 +32,22 @@ class InsertPageState extends State<InsertPage> {
             child: const Icon(Icons.close, color: Colors.white,)
         ),
         actions: [
-          TextButton(onPressed: () {}, child: const Icon(Icons.check,color: Colors.white,))
+          TextButton(
+              onPressed: () {
+                FocusScope.of(context).requestFocus(FocusNode());
+
+                //TODO 获取焦点调用后focusNode的监听在下一帧才会被通知
+                //TODO 导致键盘未收起时点击完成的情况下，数据来不及被记录页面就已经被pop
+                //TODO HACK：获取焦点后，pop操作延后一帧暂时解决
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  NoteData _noteData = NoteData(DateTime.now().millisecondsSinceEpoch, subNotes, 0);
+                  String data = jsonEncode(_noteData);
+                  log(data);
+                  Navigator.of(context).pop(_noteData);
+                });
+
+              },
+              child: const Icon(Icons.check,color: Colors.white,))
         ],
       ),
       body: GestureDetector(
@@ -63,7 +74,6 @@ class InsertPageState extends State<InsertPage> {
           inputUpdate: (String title, double value) {
             subNote.title = title;
             subNote.outcome = value;
-            log("data updated: title: $title value: $value");
           })
         );
       } else if(subNote is Income) {
@@ -83,7 +93,14 @@ class InsertPageState extends State<InsertPage> {
             )
         );
       } else if(subNote is TextNote) {
-        items.add(TextInput(text: subNote.text));
+        items.add(
+            TextInput(
+              text: subNote.text,
+              textUpdate: (String text) {
+                subNote.text = text;
+              }
+            )
+        );
       }
     }
     items.add(const Divider());

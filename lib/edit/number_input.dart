@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 typedef InputUpdate = Function (String, double);
@@ -18,7 +16,7 @@ class NumberInput extends StatefulWidget {
 
 class NumberInputState extends State<NumberInput> {
 
-  String? _selectedItem = "pets";
+  String? _selectedItem = "餐饮";
   late TextEditingController _controller;
   late FocusNode _focusNode;
 
@@ -50,20 +48,20 @@ class NumberInputState extends State<NumberInput> {
               value: _selectedItem,
               items:
               const [
-                DropdownMenuItem(child: InsertTypeItem(title: "宠物", iconData: Icons.pets), value: "pets"),
-                DropdownMenuItem(child: InsertTypeItem(title: "房租", iconData: Icons.house), value: "house_rental"),
-                DropdownMenuItem(child: InsertTypeItem(title: "房贷", iconData: Icons.add_home), value: "house_debt"),
-                DropdownMenuItem(child: InsertTypeItem(title: "加油", iconData: Icons.local_gas_station), value: "gas"),
-                DropdownMenuItem(child: InsertTypeItem(title: "购物", iconData: Icons.local_grocery_store), value: "groceries"),
-                DropdownMenuItem(child: InsertTypeItem(title: "餐饮", iconData: Icons.set_meal), value: "meal"),
-                DropdownMenuItem(child: InsertTypeItem(title: "饮料", iconData: Icons.coffee), value: "drinks"),
-                DropdownMenuItem(child: InsertTypeItem(title: "车辆", iconData: Icons.car_repair), value: "vehicle"),
-                DropdownMenuItem(child: InsertTypeItem(title: "停车", iconData: Icons.local_parking), value: "parking"),
-                DropdownMenuItem(child: InsertTypeItem(title: "住宿", iconData: Icons.hotel), value: "hotel"),
-                DropdownMenuItem(child: InsertTypeItem(title: "通勤", iconData: Icons.directions_bus), value: "transportation"),
-                DropdownMenuItem(child: InsertTypeItem(title: "母婴", iconData: Icons.child_friendly), value: "children"),
-                DropdownMenuItem(child: InsertTypeItem(title: "感情", iconData: Icons.people), value: "relations"),
-                DropdownMenuItem(child: InsertTypeItem(title: "自定义", iconData: Icons.dashboard_customize), value: "custom"),
+                DropdownMenuItem(child: InsertTypeItem(title: "宠物", iconData: Icons.pets), value: "宠物"),
+                DropdownMenuItem(child: InsertTypeItem(title: "房租", iconData: Icons.house), value: "房租"),
+                DropdownMenuItem(child: InsertTypeItem(title: "房贷", iconData: Icons.add_home), value: "房贷"),
+                DropdownMenuItem(child: InsertTypeItem(title: "加油", iconData: Icons.local_gas_station), value: "加油"),
+                DropdownMenuItem(child: InsertTypeItem(title: "购物", iconData: Icons.local_grocery_store), value: "购物"),
+                DropdownMenuItem(child: InsertTypeItem(title: "餐饮", iconData: Icons.set_meal), value: "餐饮"),
+                DropdownMenuItem(child: InsertTypeItem(title: "饮料", iconData: Icons.coffee), value: "饮料"),
+                DropdownMenuItem(child: InsertTypeItem(title: "车辆", iconData: Icons.car_repair), value: "车辆"),
+                DropdownMenuItem(child: InsertTypeItem(title: "停车", iconData: Icons.local_parking), value: "停车"),
+                DropdownMenuItem(child: InsertTypeItem(title: "住宿", iconData: Icons.hotel), value: "住宿"),
+                DropdownMenuItem(child: InsertTypeItem(title: "通勤", iconData: Icons.directions_bus), value: "通勤"),
+                DropdownMenuItem(child: InsertTypeItem(title: "母婴", iconData: Icons.child_friendly), value: "母婴"),
+                DropdownMenuItem(child: InsertTypeItem(title: "感情", iconData: Icons.people), value: "感情"),
+                DropdownMenuItem(child: InsertTypeItem(title: "自定义", iconData: Icons.dashboard_customize), value: "自定义"),
               ],
               onChanged: (item) {
                 if(item == "custom") {
@@ -87,7 +85,6 @@ class NumberInputState extends State<NumberInput> {
               focusNode: _focusNode,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               onChanged: (value) {
-                log("Edit complete");
                 widget.inputUpdate(_selectedItem!, double.parse(value));
               },
               textAlign: TextAlign.center,

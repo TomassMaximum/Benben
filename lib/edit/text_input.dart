@@ -1,11 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
+typedef TextUpdate = Function(String);
+
 class TextInput extends StatefulWidget {
-  const TextInput({Key? key, required this.text}) : super(key: key);
+  const TextInput({Key? key, required this.text, required this.textUpdate}) : super(key: key);
 
   final String text;
+  final TextUpdate textUpdate;
 
   @override
   State<StatefulWidget> createState() {
@@ -34,8 +35,9 @@ class TextInputState extends State<TextInput> {
         _controller.text = "";
       } else if(_controller.text.isEmpty) {
         _controller.text = "请在这里输入内容...";
+      } else {
+        widget.textUpdate(_controller.text);
       }
-
     });
   }
 
