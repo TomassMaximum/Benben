@@ -39,15 +39,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List<NoteData> _notes = <NoteData>[];
 
-  void _editNote() async {
-    final result = await Navigator.push(context, _createRoute());
-    if(result != null) {
-      setState(() {
-        _notes.add(result);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,15 +113,26 @@ class _MyHomePageState extends State<MyHomePage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: ListView(
+          key: UniqueKey(),
           children: _notes.map((NoteData note) => NoteItem(note: note)).toList(),
         )
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _editNote,
-        tooltip: 'Increment',
+        tooltip: '新增条条',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  void _editNote() async {
+    final result = await Navigator.push(context, _createRoute());
+    if(result != null) {
+      _notes.insert(0, result);
+      setState(() {
+
+      });
+    }
   }
 
   Route _createRoute() {

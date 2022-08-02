@@ -59,6 +59,7 @@ class InsertPageState extends State<InsertPage> {
           alignment: Alignment.topCenter,
           padding: const EdgeInsets.only(left: 24, top: 24, right: 24),
           child: ListView(
+            key: UniqueKey(),
             children: _getListItems(),
           ),
         ),
