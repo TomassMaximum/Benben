@@ -36,9 +36,13 @@ class InsertPageState extends State<InsertPage> {
               onPressed: () {
                 FocusScope.of(context).requestFocus(FocusNode());
 
-                NoteData _noteData = NoteData(DateTime.now().millisecondsSinceEpoch, subNotes, 0);
-                String data = jsonEncode(_noteData);
-                log(data);
+                // TODO 更改时间需要变更
+                NoteData _noteData = NoteData(
+                    DateTime.now().millisecondsSinceEpoch,
+                    DateTime.now().millisecondsSinceEpoch,
+                    subNotes,
+                    0
+                );
                 Navigator.of(context).pop(_noteData);
               },
               child: const Icon(Icons.check,color: Colors.white,))

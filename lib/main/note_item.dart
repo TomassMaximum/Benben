@@ -33,7 +33,7 @@ class NoteItem extends StatelessWidget {
 
   List<Widget> _getNoteWidgets(NoteData noteData) {
     List<Widget> subNotesList = <Widget>[];
-    int timestamp = noteData.timestamp;
+    int timestamp = noteData.createdAt;
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
 
     subNotesList.add(SizedBox(

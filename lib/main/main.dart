@@ -1,5 +1,6 @@
 import 'package:benben/about_app/about_app_page.dart';
 import 'package:benben/about_author/about_author_page.dart';
+import 'package:benben/database/note_database.dart';
 import 'package:benben/main/note_item.dart';
 import 'package:benben/edit/insert_page.dart';
 import 'package:benben/models/note_data.dart';
@@ -37,7 +38,23 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  final List<NoteData> _notes = <NoteData>[];
+  List<NoteData> _notes = <NoteData>[];
+  final NoteDatabase _database = NoteDatabase();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsFlutterBinding.ensureInitialized();
+    // _database.init();
+    _queryNotes();
+  }
+
+  _queryNotes() async {
+    _notes = await _database.queryNotes();
+    setState(() {
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,8 +154,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void _editNote() async {
     final result = await Navigator.push(context, _createRoute());
     if(result != null) {
+      await _database.insertNote(result);
+      _notes = await _database.queryNotes();
       setState(() {
-        _notes.insert(0, result);
+
       });
     }
   }

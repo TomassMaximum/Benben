@@ -1,12 +1,43 @@
+import 'dart:convert';
+import 'dart:developer';
+
 class NoteData {
-  int timestamp;
+  int createdAt;
+  int modifiedAt;
   List<SubNote> subNotes;
   int version;
 
-  NoteData(this.timestamp, this.subNotes, this.version);
+  NoteData(this.createdAt, this.modifiedAt, this.subNotes, this.version);
+
+  factory NoteData.fromJson(Map<String, dynamic> map) {
+    List<SubNote> _getSubNotes(List<dynamic> subNoteMaps) {
+      List<SubNote> subNotes = <SubNote>[];
+      for(dynamic subNote in subNoteMaps) {
+        if(subNote['income'] != null) {
+          subNotes.add(Income(subNote['title'], subNote['income'], subNote['order']));
+        } else if(subNote['outcome'] != null) {
+          subNotes.add(Outcome(subNote['title'], subNote['outcome'], subNote['order']));
+        } else if(subNote['url'] != null) {
+          subNotes.add(ImageNote(subNote['url'], subNote['order']));
+        } else if(subNote['text'] != null) {
+          subNotes.add(TextNote(subNote['text'], subNote['order']));
+        }
+      }
+      return subNotes;
+    }
+
+    return NoteData(
+        map['createdAt'],
+        map['modifiedAt'],
+        _getSubNotes(map['subNotes']),
+        map['version']);
+
+
+  }
 
   Map<String, dynamic> toJson() => {
-    'timestamp': timestamp,
+    'createdAt': createdAt,
+    'modifiedAt': modifiedAt,
     'subNotes': subNotes.map((subNote) => subNote.toJson()).toList(),
     'version': version
   };
@@ -18,6 +49,8 @@ class SubNote {
   SubNote(this.order);
 
   Map<String, dynamic> toJson() => {};
+
+  SubNote.fromJson(Map<String, dynamic> map) : order = map['order'];
 }
 
 class Income extends SubNote {
@@ -32,6 +65,11 @@ class Income extends SubNote {
     'income': income,
     'order': order
   };
+
+  @override
+  factory Income.fromJson(Map<String, dynamic> map) {
+    return Income(map['title'], map['income'], map['order']);
+  }
 }
 
 class Outcome extends SubNote {
@@ -46,6 +84,11 @@ class Outcome extends SubNote {
     'outcome': outcome,
     'order': order
   };
+
+  @override
+  factory Outcome.fromJson(Map<String, dynamic> map) {
+    return Outcome(map['title'], map['outcome'], map['order']);
+  }
 }
 
 class TextNote extends SubNote {
@@ -58,6 +101,11 @@ class TextNote extends SubNote {
     'text': text,
     'order': order
   };
+
+  @override
+  factory TextNote.fromJson(Map<String, dynamic> map) {
+    return TextNote(map['text'], map['order']);
+  }
 }
 
 class ImageNote extends SubNote {
@@ -66,5 +114,13 @@ class ImageNote extends SubNote {
   ImageNote(this.url, int order) : super(order);
 
   @override
-  Map<String, dynamic> toJson() => {'url': url};
+  Map<String, dynamic> toJson() => {
+    'url': url,
+    'order': order
+  };
+
+  @override
+  factory ImageNote.fromJson(Map<String, dynamic> map) {
+    return ImageNote(map['url'], map['order']);
+  }
 }

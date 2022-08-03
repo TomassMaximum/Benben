@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 typedef TextUpdate = Function(String);
@@ -33,7 +31,6 @@ class TextInputState extends State<TextInput> {
     }
 
     _controller.addListener(() {
-      log("_controller update: ${_controller.text}");
       widget.textUpdate(_controller.text);
     });
 
