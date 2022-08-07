@@ -18,7 +18,7 @@ class NoteData {
         } else if(subNote['outcome'] != null) {
           subNotes.add(Outcome(subNote['title'], subNote['outcome'], subNote['order']));
         } else if(subNote['url'] != null) {
-          subNotes.add(ImageNote(subNote['url'], subNote['order']));
+          subNotes.add(ImageNote(subNote['url'], subNote['imageData'], subNote['order']));
         } else if(subNote['text'] != null) {
           subNotes.add(TextNote(subNote['text'], subNote['order']));
         }
@@ -110,17 +110,19 @@ class TextNote extends SubNote {
 
 class ImageNote extends SubNote {
   String url;
+  String imageData;
 
-  ImageNote(this.url, int order) : super(order);
+  ImageNote(this.url, this.imageData, int order) : super(order);
 
   @override
   Map<String, dynamic> toJson() => {
     'url': url,
+    'imageData': imageData,
     'order': order
   };
 
   @override
   factory ImageNote.fromJson(Map<String, dynamic> map) {
-    return ImageNote(map['url'], map['order']);
+    return ImageNote(map['url'], map['imageData'], map['order']);
   }
 }

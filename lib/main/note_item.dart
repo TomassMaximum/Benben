@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
@@ -117,7 +119,7 @@ class NoteItem extends StatelessWidget {
             color: Colors.white,
             margin: const EdgeInsets.only(top: 16, bottom: 16),
             padding: const EdgeInsets.all(8),
-            child: Image.file(File(subNote.url))
+            child: Image.memory(base64Decode(subNote.imageData))
         ));
       } else if(subNote is TextNote) {
         subNotesList.add(

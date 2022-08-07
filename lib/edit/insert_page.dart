@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:benben/edit/number_input.dart';
 import 'package:benben/edit/text_input.dart';
 import 'package:benben/models/note_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 
 class InsertPage extends StatefulWidget {
@@ -88,7 +88,7 @@ class InsertPageState extends State<InsertPage> {
               color: Colors.white,
               margin: const EdgeInsets.only(top: 16, bottom: 16),
               padding: const EdgeInsets.all(8),
-              child: Image.file(File(subNote.url))
+              child: Image.memory(base64Decode(subNote.imageData))
             )
         );
       } else if(subNote is TextNote) {
@@ -122,8 +122,17 @@ class InsertPageState extends State<InsertPage> {
             final ImagePicker _picker = ImagePicker();
             final XFile? file = await _picker.pickImage(source: ImageSource.gallery);
             if(file != null) {
+              Uint8List bytes = await file.readAsBytes();
+              var result = await FlutterImageCompress.compressWithList(
+                bytes,
+                minHeight: 1920,
+                minWidth: 1080,
+                quality: 88,
+              );
+
+              String base64Image = base64Encode(result);
               setState(() {
-                ImageNote imageNote = ImageNote(file.path, subNotes.length);
+                ImageNote imageNote = ImageNote("", base64Image, subNotes.length);
                 subNotes.add(imageNote);
               });
             }
