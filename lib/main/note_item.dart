@@ -1,17 +1,20 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-
-import '../edit/text_input.dart';
 import '../models/note_data.dart';
 
 enum Menu { mark, share, delete }
 
+typedef OnItemMarked = Function();
+typedef OnItemShared = Function();
+typedef OnItemDeleted = Function();
+
 class NoteItem extends StatelessWidget {
-  const NoteItem({Key? key, required this.note}) : super(key: key);
+  const NoteItem({Key? key, required this.note, required this.onItemMarked, required this.onItemShared, required this.onItemDeleted}) : super(key: key);
+
+  final OnItemMarked onItemMarked;
+  final OnItemShared onItemShared;
+  final OnItemDeleted onItemDeleted;
 
   final NoteData note;
 
@@ -95,7 +98,19 @@ class NoteItem extends StatelessWidget {
                           style: TextStyle(fontSize: 16, color: Colors.black))
                     ])))
               ],
-              onSelected: (Menu item) {},
+              onSelected: (Menu item) {
+                switch(item) {
+                  case Menu.mark:
+                    // TODO: Handle this case.
+                    break;
+                  case Menu.share:
+                    // TODO: Handle this case.
+                    break;
+                  case Menu.delete:
+                    onItemDeleted();
+                    break;
+                }
+              },
               child: const Icon(Icons.more_horiz),
             ),
           )
@@ -104,29 +119,27 @@ class NoteItem extends StatelessWidget {
     ));
 
     for (SubNote subNote in noteData.subNotes) {
-      if(subNote is Income) {
-        subNotesList.add(Row(children: [
-          Text(subNote.title),
-          Text(subNote.income.toString())
-        ]));
-      } else if(subNote is Outcome) {
-        subNotesList.add(Row(children: [
-          Text(subNote.title),
-          Text(subNote.outcome.toString())
-        ]));
-      } else if(subNote is ImageNote) {
+      if (subNote is Income) {
+        subNotesList.add(Row(
+            children: [Text(subNote.title), Text(subNote.income.toString())]));
+      } else if (subNote is Outcome) {
+        subNotesList.add(Row(
+            children: [Text(subNote.title), Text(subNote.outcome.toString())]));
+      } else if (subNote is ImageNote) {
         subNotesList.add(Container(
             color: Colors.white,
             margin: const EdgeInsets.only(top: 16, bottom: 16),
             padding: const EdgeInsets.all(8),
-            child: Image.memory(base64Decode(subNote.imageData))
+            child: Image.memory(base64Decode(subNote.imageData))));
+      } else if (subNote is TextNote) {
+        subNotesList.add(Text(
+          subNote.text,
+          style: const TextStyle(
+              color: Colors.brown,
+              fontSize: 16,
+              letterSpacing: 1.5,
+              height: 1.4),
         ));
-      } else if(subNote is TextNote) {
-        subNotesList.add(
-            Text(
-              subNote.text,
-              style: const TextStyle(color: Colors.brown, fontSize: 16, letterSpacing: 1.5, height: 1.4),)
-        );
       }
     }
 

@@ -38,6 +38,7 @@ class InsertPageState extends State<InsertPage> {
 
                 // TODO 更改时间需要变更
                 NoteData _noteData = NoteData(
+                    0,
                     DateTime.now().millisecondsSinceEpoch,
                     DateTime.now().millisecondsSinceEpoch,
                     subNotes,

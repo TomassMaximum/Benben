@@ -37,7 +37,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   List<NoteData> _notes = <NoteData>[];
   final NoteDatabase _database = NoteDatabase();
 
@@ -45,15 +44,12 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized();
-    // _database.init();
     _queryNotes();
   }
 
   _queryNotes() async {
     _notes = await _database.queryNotes();
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   @override
@@ -64,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       drawer: Container(
           margin: const EdgeInsets.only(right: 100),
-          padding: const EdgeInsets.only(top:80),
+          padding: const EdgeInsets.only(top: 80),
           constraints: const BoxConstraints.expand(),
           color: Colors.brown,
           child: Container(
@@ -73,35 +69,49 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      width: 60,
-                      height: 60,
-                      child: CircleAvatar(
-                        backgroundColor: Color(0xfffedbd0),
-                        child: Text("Hola"),
-                      ),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: CircleAvatar(
+                      backgroundColor: Color(0xfffedbd0),
+                      child: Text("Hola"),
                     ),
-                    const SizedBox(height: 24,),
-                    Column(
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text("璃月的小龟", style: TextStyle(color: Color(0xfffedbd0), fontSize: 16)),
-                          SizedBox(height: 8,),
-                          Text("id: 1588965", style: TextStyle(color: Color(0xfffedbd0), fontSize: 8),)
-                        ]
-
-                )
-                  ]
-                ),
+                      children: const [
+                        Text("璃月的小龟",
+                            style: TextStyle(
+                                color: Color(0xfffedbd0), fontSize: 16)),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          "id: 1588965",
+                          style:
+                              TextStyle(color: Color(0xfffedbd0), fontSize: 8),
+                        )
+                      ])
+                ]),
                 const SizedBox(height: 160),
-                const SettingsItem(text: "通知提醒", iconData: Icons.notifications, newPage: NotificationPage()),
+                const SettingsItem(
+                    text: "通知提醒",
+                    iconData: Icons.notifications,
+                    newPage: NotificationPage()),
                 const Divider(color: Color(0xfffedbd0)),
-                const SettingsItem(text: "关于作者", iconData: Icons.face, newPage: AboutAuthorPage()),
+                const SettingsItem(
+                    text: "关于作者",
+                    iconData: Icons.face,
+                    newPage: AboutAuthorPage()),
                 const Divider(color: Color(0xfffedbd0)),
-                const SettingsItem(text: "关于APP", iconData: Icons.info, newPage: AboutAppPage()),
+                const SettingsItem(
+                    text: "关于APP",
+                    iconData: Icons.info,
+                    newPage: AboutAppPage()),
                 const Divider(color: Color(0xfffedbd0)),
                 TextButton(
                   onPressed: () {},
@@ -110,13 +120,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     alignment: Alignment.centerLeft,
                     child: RichText(
                       textAlign: TextAlign.center,
-                      text: const TextSpan(
-                          children: [
-                            WidgetSpan(child: Icon(Icons.logout, color: Colors.white, size: 20,)),
-                            WidgetSpan(child: SizedBox(width: 12)),
-                            TextSpan(text: "登出账号", style: TextStyle(fontSize: 16))
-                          ]
-                      ),
+                      text: const TextSpan(children: [
+                        WidgetSpan(
+                            child: Icon(
+                          Icons.logout,
+                          color: Colors.white,
+                          size: 20,
+                        )),
+                        WidgetSpan(child: SizedBox(width: 12)),
+                        TextSpan(text: "登出账号", style: TextStyle(fontSize: 16))
+                      ]),
                     ),
                   ),
                 ),
@@ -125,15 +138,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           )),
       body: Container(
-        color: const Color(0xfffedbd0),
-        alignment: Alignment.center,
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: ListView(
-          key: UniqueKey(),
-          children: _getNotesList(_notes),
-        )
-      ),
+          color: const Color(0xfffedbd0),
+          alignment: Alignment.center,
+          // Center is a layout widget. It takes a single child and positions it
+          // in the middle of the parent.
+          child: ListView(
+            key: UniqueKey(),
+            children: _getNotesList(_notes),
+          )),
       floatingActionButton: FloatingActionButton(
         onPressed: _editNote,
         tooltip: '新增条条',
@@ -145,31 +157,38 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> _getNotesList(List<NoteData> notes) {
     List<Widget> noteWidgets = <Widget>[];
     noteWidgets.add(const SizedBox(height: 6));
-    for(NoteData note in notes) {
-      noteWidgets.add(NoteItem(note: note));
+    for (NoteData note in notes) {
+      noteWidgets.add(NoteItem(
+          note: note,
+          onItemMarked: () {},
+          onItemShared: () {},
+          onItemDeleted: () async {
+            await _database.deleteNote(note.id);
+            _queryNotes();
+          }));
     }
     return noteWidgets;
   }
 
   void _editNote() async {
     final result = await Navigator.push(context, _createRoute());
-    if(result != null) {
+    if (result != null) {
       await _database.insertNote(result);
       _notes = await _database.queryNotes();
-      setState(() {
-
-      });
+      setState(() {});
     }
   }
 
   Route _createRoute() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => const InsertPage(),
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          const InsertPage(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
         const curve = Curves.ease;
-        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
         return SlideTransition(
           position: animation.drive(tween),
           child: child,

@@ -7,7 +7,7 @@ import 'package:sqflite/sqflite.dart';
 
 class NoteDatabase {
 
-  late Database database;
+  Database? database;
 
   init() async {
     database = await openDatabase(
@@ -20,10 +20,19 @@ class NoteDatabase {
     );
   }
 
+  _initIfNot() async {
+    if(database != null && database!.isOpen) {
+      return;
+    }
+    await init();
+  }
+
   insertNote(NoteData noteData) async {
+    await _initIfNot();
+
     log("insert: ${jsonEncode(noteData)}");
 
-    database.insert('notes', {
+    database!.insert('notes', {
       'created_at': noteData.createdAt,
       'modified_at': noteData.modifiedAt,
       'data': jsonEncode(noteData)
@@ -34,17 +43,23 @@ class NoteDatabase {
 
   Future<List<NoteData>> queryNotes() async {
 
-    await init();
+    await _initIfNot();
 
-    List<Map<String, dynamic>> maps = await database.query('notes');
+    List<Map<String, dynamic>> maps = await database!.query('notes');
 
     if(maps.isNotEmpty) {
       log("query: ${maps[0]['data']}");
     }
 
     return List.generate(maps.length, (i) {
-      return NoteData.fromJson(jsonDecode(maps[i]['data']));
+      return NoteData.fromJson(jsonDecode(maps[i]['data']), maps[i]['id']);
     });
+  }
+
+  deleteNote(int id) async {
+    await _initIfNot();
+
+    await database!.delete('notes', where: 'id = ?', whereArgs: [id]);
   }
 
 
@@ -54,6 +69,6 @@ class NoteDatabase {
   }
 
   _closeDatabase() async {
-    await database.close();
+    await database!.close();
   }
 }

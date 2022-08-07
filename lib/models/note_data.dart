@@ -1,15 +1,13 @@
-import 'dart:convert';
-import 'dart:developer';
-
 class NoteData {
+  int id;
   int createdAt;
   int modifiedAt;
   List<SubNote> subNotes;
   int version;
 
-  NoteData(this.createdAt, this.modifiedAt, this.subNotes, this.version);
+  NoteData(this.id, this.createdAt, this.modifiedAt, this.subNotes, this.version);
 
-  factory NoteData.fromJson(Map<String, dynamic> map) {
+  factory NoteData.fromJson(Map<String, dynamic> map, int id) {
     List<SubNote> _getSubNotes(List<dynamic> subNoteMaps) {
       List<SubNote> subNotes = <SubNote>[];
       for(dynamic subNote in subNoteMaps) {
@@ -27,6 +25,7 @@ class NoteData {
     }
 
     return NoteData(
+        id,
         map['createdAt'],
         map['modifiedAt'],
         _getSubNotes(map['subNotes']),
