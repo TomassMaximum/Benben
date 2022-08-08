@@ -90,12 +90,17 @@ class InsertPageState extends State<InsertPage> {
 
     for (SubNote subNote in widget.noteData.subNotes) {
       if (subNote is Outcome) {
-        items.add(NumberInput(inputUpdate: (String title, double value) {
+        items.add(
+            NumberInput(
+                numberNote: subNote,
+                inputUpdate: (String title, double value) {
           subNote.title = title;
           subNote.outcome = value;
         }));
       } else if (subNote is Income) {
-        items.add(NumberInput(inputUpdate: (String title, double value) {
+        items.add(NumberInput(
+            numberNote: subNote,
+            inputUpdate: (String title, double value) {
           subNote.title = title;
           subNote.income = value;
         }));
@@ -117,13 +122,13 @@ class InsertPageState extends State<InsertPage> {
     items.add(Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       _getTab("支出", Icons.wallet, () {
         setState(() {
-          Outcome outcome = Outcome("支出", 15, widget.noteData.subNotes.length);
+          Outcome outcome = Outcome("餐饮", 0, widget.noteData.subNotes.length);
           widget.noteData.subNotes.add(outcome);
         });
       }),
       _getTab("收入", Icons.money, () {
         setState(() {
-          Income income = Income("title", 200, widget.noteData.subNotes.length);
+          Income income = Income("餐饮", 0, widget.noteData.subNotes.length);
           widget.noteData.subNotes.add(income);
         });
       }),
