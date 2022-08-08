@@ -147,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: _getNotesList(_notes),
           )),
       floatingActionButton: FloatingActionButton(
-        onPressed: _editNote,
+        onPressed: _newNote,
         tooltip: '新增条条',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
@@ -170,8 +170,16 @@ class _MyHomePageState extends State<MyHomePage> {
     return noteWidgets;
   }
 
-  void _editNote() async {
-    final result = await Navigator.push(context, _createRoute());
+  void _newNote() async {
+    NoteData _noteData = NoteData(
+        0,
+        DateTime.now().millisecondsSinceEpoch,
+        DateTime.now().millisecondsSinceEpoch,
+        DateTime.now().millisecondsSinceEpoch,
+        <SubNote>[],
+        0);
+
+    final result = await Navigator.push(context, _createRoute(_noteData));
     if (result != null) {
       await _database.insertNote(result);
       _notes = await _database.queryNotes();
@@ -179,10 +187,10 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Route _createRoute() {
+  Route _createRoute(NoteData noteData) {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
-          const InsertPage(),
+          InsertPage(noteData: noteData),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;

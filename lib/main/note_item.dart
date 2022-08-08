@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:benben/elements/date_text.dart';
 import 'package:flutter/material.dart';
 import '../models/note_data.dart';
 
@@ -10,7 +11,13 @@ typedef OnItemShared = Function();
 typedef OnItemDeleted = Function();
 
 class NoteItem extends StatelessWidget {
-  const NoteItem({Key? key, required this.note, required this.onItemMarked, required this.onItemShared, required this.onItemDeleted}) : super(key: key);
+  const NoteItem(
+      {Key? key,
+      required this.note,
+      required this.onItemMarked,
+      required this.onItemShared,
+      required this.onItemDeleted})
+      : super(key: key);
 
   final OnItemMarked onItemMarked;
   final OnItemShared onItemShared;
@@ -48,9 +55,7 @@ class NoteItem extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Container(
-              alignment: Alignment.center,
-              child: Text(
-                  "${dateTime.month.toString()}月${dateTime.day.toString()}日 ${getWeekday(dateTime.weekday)}")),
+              alignment: Alignment.center, child: DateText(dateTime: dateTime)),
           Positioned(
             right: 0,
             child: PopupMenuButton(
@@ -99,7 +104,7 @@ class NoteItem extends StatelessWidget {
                     ])))
               ],
               onSelected: (Menu item) {
-                switch(item) {
+                switch (item) {
                   case Menu.mark:
                     // TODO: Handle this case.
                     break;
@@ -144,27 +149,5 @@ class NoteItem extends StatelessWidget {
     }
 
     return subNotesList;
-  }
-
-  String getWeekday(int weekday) {
-    switch (weekday) {
-      case 1:
-        return "星期一";
-      case 2:
-        return "星期二";
-      case 3:
-        return "星期三";
-      case 4:
-        return "星期四";
-      case 5:
-        return "星期五";
-      case 6:
-        return "星期六";
-      case 7:
-        return "星期日";
-      default:
-        log("Error! weekday unexpected: ${weekday.toString()}");
-        return "N/A";
-    }
   }
 }

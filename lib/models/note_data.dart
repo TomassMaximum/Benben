@@ -1,11 +1,12 @@
 class NoteData {
   int id;
+  int dateTime;
   int createdAt;
   int modifiedAt;
   List<SubNote> subNotes;
   int version;
 
-  NoteData(this.id, this.createdAt, this.modifiedAt, this.subNotes, this.version);
+  NoteData(this.id, this.dateTime, this.createdAt, this.modifiedAt, this.subNotes, this.version);
 
   factory NoteData.fromJson(Map<String, dynamic> map, int id) {
     List<SubNote> _getSubNotes(List<dynamic> subNoteMaps) {
@@ -26,15 +27,15 @@ class NoteData {
 
     return NoteData(
         id,
+        map['dateTime'],
         map['createdAt'],
         map['modifiedAt'],
         _getSubNotes(map['subNotes']),
         map['version']);
-
-
   }
 
   Map<String, dynamic> toJson() => {
+    'dateTime': dateTime,
     'createdAt': createdAt,
     'modifiedAt': modifiedAt,
     'subNotes': subNotes.map((subNote) => subNote.toJson()).toList(),

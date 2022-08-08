@@ -53,22 +53,12 @@ class NoteDatabase {
 
     return List.generate(maps.length, (i) {
       return NoteData.fromJson(jsonDecode(maps[i]['data']), maps[i]['id']);
-    });
+    }).reversed.toList();
   }
 
   deleteNote(int id) async {
     await _initIfNot();
 
     await database!.delete('notes', where: 'id = ?', whereArgs: [id]);
-  }
-
-
-  _openDatabase() async {
-    database = await openDatabase(
-        join(await getDatabasesPath(), 'notes_database.db'));
-  }
-
-  _closeDatabase() async {
-    await database!.close();
   }
 }
