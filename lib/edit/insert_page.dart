@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:benben/edit/image_input.dart';
 import 'package:benben/edit/number_input.dart';
 import 'package:benben/edit/text_input.dart';
 import 'package:benben/models/note_data.dart';
@@ -23,6 +26,19 @@ class InsertPage extends StatefulWidget {
 }
 
 class InsertPageState extends State<InsertPage> {
+  late ScrollController _scrollController;
+  late StreamController<NoteData> _streamController;
+
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController = ScrollController(keepScrollOffset: true);
+    _streamController = StreamController(onListen: () => {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +57,8 @@ class InsertPageState extends State<InsertPage> {
               onPressed: () {
                 FocusScope.of(context).requestFocus(FocusNode());
 
-                widget.noteData.modifiedAt = DateTime.now().millisecondsSinceEpoch;
+                widget.noteData.modifiedAt =
+                    DateTime.now().millisecondsSinceEpoch;
 
                 // TODO 更改时间需要变更
                 Navigator.of(context).pop(widget.noteData);
@@ -59,24 +76,34 @@ class InsertPageState extends State<InsertPage> {
         child: Container(
           color: const Color(0xfffedbd0),
           alignment: Alignment.topCenter,
-          padding: const EdgeInsets.only(left: 24, top: 24, right: 24),
-          child: ListView(
-            key: UniqueKey(),
-            children: _getListItems(),
-          ),
+          padding: const EdgeInsets.only(left: 24, right: 24),
+          child: StreamBuilder<NoteData>(
+              stream: _streamController.stream,
+              initialData: widget.noteData,
+              builder: (context, noteDataSnap) {
+                NoteData _noteData = noteDataSnap.data!;
+                return AnimatedList(
+                  controller: _scrollController,
+                  initialItemCount: _noteData.subNotes.length + 3,
+                  key: _listKey,
+                  itemBuilder: (context, index, animation) {
+                    log("index: ${index.toString()}");
+                    return _getListItems(_noteData)[index];
+                  },
+                );
+              }),
         ),
       ),
     );
   }
 
-  List<Widget> _getListItems() {
+  List<Widget> _getListItems(NoteData noteData) {
     List<Widget> items = <Widget>[];
 
     // 默认日期为当前
     items.add(TextButton(
         child: DateText(
-            dateTime:
-                DateTime.fromMillisecondsSinceEpoch(widget.noteData.dateTime)),
+            dateTime: DateTime.fromMillisecondsSinceEpoch(noteData.dateTime)),
         onPressed: () async {
           await AwesomeDialog(
               context: context,
@@ -88,28 +115,23 @@ class InsertPageState extends State<InsertPage> {
               )).show();
         }));
 
-    for (SubNote subNote in widget.noteData.subNotes) {
+    for (SubNote subNote in noteData.subNotes) {
       if (subNote is Outcome) {
-        items.add(
-            NumberInput(
-                numberNote: subNote,
-                inputUpdate: (String title, double value) {
-          subNote.title = title;
-          subNote.outcome = value;
-        }));
+        items.add(NumberInput(
+            numberNote: subNote,
+            inputUpdate: (String title, double value) {
+              subNote.title = title;
+              subNote.outcome = value;
+            }));
       } else if (subNote is Income) {
         items.add(NumberInput(
             numberNote: subNote,
             inputUpdate: (String title, double value) {
-          subNote.title = title;
-          subNote.income = value;
-        }));
+              subNote.title = title;
+              subNote.income = value;
+            }));
       } else if (subNote is ImageNote) {
-        items.add(Container(
-            color: Colors.white,
-            margin: const EdgeInsets.only(top: 16, bottom: 16),
-            padding: const EdgeInsets.all(8),
-            child: Image.memory(base64Decode(subNote.imageData))));
+        items.add(ImageInput(imageData: subNote.imageData));
       } else if (subNote is TextNote) {
         items.add(TextInput(
             text: subNote.text,
@@ -121,16 +143,18 @@ class InsertPageState extends State<InsertPage> {
     items.add(const Divider());
     items.add(Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       _getTab("支出", Icons.wallet, () {
-        setState(() {
-          Outcome outcome = Outcome("餐饮", 0, widget.noteData.subNotes.length);
-          widget.noteData.subNotes.add(outcome);
-        });
+        Outcome outcome = Outcome("餐饮", 0, noteData.subNotes.length);
+        noteData.subNotes.add(outcome);
+
+        _listKey.currentState!.insertItem(0);
+        // _streamController.add(noteData);
       }),
       _getTab("收入", Icons.money, () {
-        setState(() {
-          Income income = Income("餐饮", 0, widget.noteData.subNotes.length);
-          widget.noteData.subNotes.add(income);
-        });
+        Income income = Income("餐饮", 0, noteData.subNotes.length);
+        noteData.subNotes.add(income);
+
+        _listKey.currentState!.insertItem(0);
+        // _streamController.add(noteData);
       }),
       _getTab("图片", Icons.add_a_photo, () async {
         final ImagePicker _picker = ImagePicker();
@@ -146,19 +170,20 @@ class InsertPageState extends State<InsertPage> {
           );
 
           String base64Image = base64Encode(result);
-          setState(() {
-            ImageNote imageNote =
-                ImageNote("", base64Image, widget.noteData.subNotes.length);
-            widget.noteData.subNotes.add(imageNote);
-          });
+          ImageNote imageNote =
+              ImageNote("", base64Image, noteData.subNotes.length);
+          noteData.subNotes.add(imageNote);
+
+          _listKey.currentState!.insertItem(0);
+          // _streamController.add(noteData);
         }
       }),
       _getTab("文字", Icons.add_comment, () {
-        setState(() {
-          TextNote textNote =
-              TextNote("请在这里输入内容...", widget.noteData.subNotes.length);
-          widget.noteData.subNotes.add(textNote);
-        });
+        TextNote textNote = TextNote("请在这里输入内容...", noteData.subNotes.length);
+        noteData.subNotes.add(textNote);
+
+        _listKey.currentState!.insertItem(0);
+        // _streamController.add(noteData);
       })
     ]));
 
@@ -178,5 +203,11 @@ class InsertPageState extends State<InsertPage> {
       TextButton(onPressed: callback, child: Icon(iconData, size: 28)),
       Text(title)
     ]);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }
