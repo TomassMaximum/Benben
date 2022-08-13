@@ -117,27 +117,54 @@ class InsertPageState extends State<InsertPage> {
 
     for (SubNote subNote in noteData.subNotes) {
       if (subNote is Outcome) {
-        items.add(NumberInput(
-            numberNote: subNote,
-            inputUpdate: (String title, double value) {
-              subNote.title = title;
-              subNote.outcome = value;
-            }));
+        items.add(GestureDetector(
+          onLongPress: () {
+            noteData.subNotes.remove(subNote);
+            _listKey.currentState!
+                .removeItem(0, (context, animation) => Container());
+          },
+          child: NumberInput(
+              numberNote: subNote,
+              inputUpdate: (String title, double value) {
+                subNote.title = title;
+                subNote.outcome = value;
+              }),
+        ));
       } else if (subNote is Income) {
-        items.add(NumberInput(
-            numberNote: subNote,
-            inputUpdate: (String title, double value) {
-              subNote.title = title;
-              subNote.income = value;
-            }));
+        items.add(GestureDetector(
+          onLongPress: () {
+            noteData.subNotes.remove(subNote);
+            _listKey.currentState!
+                .removeItem(0, (context, animation) => Container());
+          },
+          child: NumberInput(
+              numberNote: subNote,
+              inputUpdate: (String title, double value) {
+                subNote.title = title;
+                subNote.income = value;
+              }),
+        ));
       } else if (subNote is ImageNote) {
-        items.add(ImageInput(imageData: subNote.imageData));
+        items.add(GestureDetector(
+            onLongPress: () {
+              noteData.subNotes.remove(subNote);
+              _listKey.currentState!
+                  .removeItem(0, (context, animation) => Container());
+            },
+            child: ImageInput(imageData: subNote.imageData)));
       } else if (subNote is TextNote) {
-        items.add(TextInput(
-            text: subNote.text,
-            textUpdate: (String text) {
-              subNote.text = text;
-            }));
+        items.add(GestureDetector(
+          onLongPress: () {
+            noteData.subNotes.remove(subNote);
+            _listKey.currentState!
+                .removeItem(0, (context, animation) => Container());
+          },
+          child: TextInput(
+              text: subNote.text,
+              textUpdate: (String text) {
+                subNote.text = text;
+              }),
+        ));
       }
     }
     items.add(const Divider());
